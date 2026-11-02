@@ -38,14 +38,14 @@ impl Paths {
             claude_threep: app_data.join("Claude-3p"),
             vscode,
             codex: home.join(".codex"),
-            state: home.join(".supergpt-connect"),
+            state: home.join(".tokenxiu-connect"),
             sandbox: true,
         }
     }
     pub fn discover() -> Result<Self, String> {
         // Explicit isolated home for native smoke tests. Never fall back to real home if invalid.
         if cfg!(debug_assertions) {
-            if let Some(home) = std::env::var_os("SUPERGPT_CONNECT_TEST_HOME") {
+            if let Some(home) = std::env::var_os("TOKENXIU_CONNECT_TEST_HOME") {
                 let home = PathBuf::from(home);
                 if !home.is_absolute() {
                     return Err("测试目录必须是绝对路径。".into());
@@ -101,7 +101,7 @@ impl Paths {
             FileKind::ClaudeVscode => self.vscode.clone(),
             FileKind::CodexConfig => self.codex.join("config.toml"),
             FileKind::CodexAuth => self.codex.join("auth.json"),
-            FileKind::CodexCatalog => self.codex.join("supergpt-models.json"),
+            FileKind::CodexCatalog => self.codex.join("tokenxiu-models.json"),
         }
     }
     /// The extension can override CLAUDE_CONFIG_DIR independently of Connect's process.
@@ -477,7 +477,7 @@ fn restore_record(paths: &Paths, client: Client, record: &Path) -> Result<(), St
     for e in &backup.entries {
         let current = read_optional(&paths.target(e.kind))?;
         if current != e.before && current.as_deref().map(digest).as_deref() != Some(&e.after_hash) {
-            return Err("导入后配置又被修改过，自动恢复已停止，以保留你的新改动。备份仍在 .supergpt-connect 目录。".into());
+            return Err("导入后配置又被修改过，自动恢复已停止，以保留你的新改动。备份仍在 .tokenxiu-connect 目录。".into());
         }
     }
     for e in backup.entries.iter().rev() {

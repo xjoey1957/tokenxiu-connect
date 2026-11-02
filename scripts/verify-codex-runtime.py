@@ -39,7 +39,7 @@ def download_codex(directory):
         name = f"codex-{arch}-apple-darwin.tar.gz"
     else:
         raise RuntimeError("Use --codex PATH outside macOS and Windows")
-    headers = {"User-Agent": "SuperGPT-Connect-verification"}
+    headers = {"User-Agent": "TokenXiu-Connect-verification"}
     if token := os.environ.get("GITHUB_TOKEN"):
         headers["Authorization"] = "Bearer " + token
     req = urllib.request.Request(
@@ -249,7 +249,7 @@ def main():
                 assert not (home / ".codex/auth.json").exists()
             else:
                 assert (home / ".codex/auth.json").read_bytes() == original_auth, "Official credentials were changed"
-            catalog_path = home / ".codex/supergpt-models.json"
+            catalog_path = home / ".codex/tokenxiu-models.json"
             if legacy_vision:
                 old = json.loads(catalog_path.read_text())
                 old["models"][0]["input_modalities"] = ["text"]
@@ -257,7 +257,7 @@ def main():
                 apply()
             if legacy:
                 old = json.loads(catalog_path.read_text())
-                old.pop("_supergpt_connect", None)
+                old.pop("_tokenxiu_connect", None)
                 for row in old["models"]:
                     row.update(context_window=32768, max_context_window=32768)
                 catalog_path.write_text(json.dumps(old))

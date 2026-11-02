@@ -1,7 +1,7 @@
 use serde_json::{json, Value};
 use sha2::{Digest, Sha256};
 use std::fs;
-use supergpt_connect_lib::{
+use tokenxiu_connect_lib::{
     adapter,
     models::{Client, ValidatedInput},
     restore::{self, RestorePoint},

@@ -1,19 +1,19 @@
 [package]
-name = "supergpt-connect"
+name = "tokenxiu-connect"
 version = "0.1.6"
 description = "A minimal Claude Code and Codex API configurator, based on CC Switch"
 edition = "2021"
 rust-version = "1.85"
 license = "MIT"
-repository = "https://github.com/superpilot69/supergpt-connect"
-default-run = "supergpt-connect"
+repository = "https://github.com/xjoey1957/tokenxiu-connect"
+default-run = "tokenxiu-connect"
 
 [lib]
-name = "supergpt_connect_lib"
+name = "tokenxiu_connect_lib"
 crate-type = ["rlib", "cdylib", "staticlib"]
 
 [[bin]]
-name = "supergpt-connect"
+name = "tokenxiu-connect"
 path = "src/main.rs"
 required-features = ["desktop"]
 

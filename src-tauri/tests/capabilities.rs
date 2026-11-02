@@ -1,5 +1,5 @@
 use serde_json::{json, Value};
-use supergpt_connect_lib::{
+use tokenxiu_connect_lib::{
     adapter,
     capabilities::{self, State, ToolSearchMode},
     models::{Client, ValidatedInput},

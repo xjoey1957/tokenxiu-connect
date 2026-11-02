@@ -1,7 +1,7 @@
 //! Test driver for the real production discovery/import/restore path. Fake credentials only.
 use serde::Deserialize;
 use std::{env, fs, path::PathBuf};
-use supergpt_connect_lib::{adapter, models, restore, storage::Paths};
+use tokenxiu_connect_lib::{adapter, models, restore, storage::Paths};
 
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]

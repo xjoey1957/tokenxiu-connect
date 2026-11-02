@@ -91,8 +91,8 @@ pub(crate) fn prepare_import(
         .map_err(|_| "现有模型目录不是有效 JSON，配置尚未写入。")?;
     // A cache is an optional hint; a missing or malformed cache must not break known models.
     let cached: Option<Value> = cached.and_then(|s| serde_json::from_str(s).ok());
-    let sources = catalog["_supergpt_connect"]["context_sources"].clone();
-    let gateway_fields = catalog["_supergpt_connect"]["gateway_context_fields"].clone();
+    let sources = catalog["_tokenxiu_connect"]["context_sources"].clone();
+    let gateway_fields = catalog["_tokenxiu_connect"]["gateway_context_fields"].clone();
     let mut defaults = json!({});
     let rows = catalog["models"]
         .as_array_mut()
@@ -129,7 +129,7 @@ pub(crate) fn prepare_import(
         if let Some(old) = previous.as_ref().and_then(|c| find_model(c, &id)) {
             let old_context = limits(old);
             let recorded =
-                &previous.as_ref().unwrap()["_supergpt_connect"]["generated_context"][&id];
+                &previous.as_ref().unwrap()["_tokenxiu_connect"]["generated_context"][&id];
             for key in FIELDS {
                 let manually_changed = if recorded.is_object() {
                     old_context[key] != recorded[key]
@@ -145,7 +145,7 @@ pub(crate) fn prepare_import(
     }
     // Store only nonsecret generation metadata inside the already-backed-up catalog.
     // Comparing against it on the next import distinguishes user edits from our defaults.
-    catalog["_supergpt_connect"]["schema_version"] = json!(2);
-    catalog["_supergpt_connect"]["generated_context"] = defaults;
+    catalog["_tokenxiu_connect"]["schema_version"] = json!(2);
+    catalog["_tokenxiu_connect"]["generated_context"] = defaults;
     serde_json::to_string_pretty(&catalog).map_err(|_| "无法生成模型目录。".into())
 }

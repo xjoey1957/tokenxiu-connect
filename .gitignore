@@ -12,5 +12,6 @@ release/
 *.p12
 *.pfx
 .supergpt-connect/
+.tokenxiu-connect/
 .claude/
 .codex/

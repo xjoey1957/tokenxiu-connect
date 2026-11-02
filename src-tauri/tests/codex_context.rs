@@ -1,6 +1,6 @@
 use serde_json::{json, Value};
 use std::fs;
-use supergpt_connect_lib::{
+use tokenxiu_connect_lib::{
     adapter,
     models::{self, Client, ValidatedInput},
     storage::{self, FileKind, Paths},
@@ -74,7 +74,7 @@ fn legacy_32k_defaults_are_repaired_but_explicit_local_repairs_survive_repeated_
         let paths = Paths::for_home(home.path());
         adapter::apply(&paths, input("gpt-6.1-sol", json!({}))).unwrap();
         let mut legacy = read(&paths);
-        legacy.as_object_mut().unwrap().remove("_supergpt_connect");
+        legacy.as_object_mut().unwrap().remove("_tokenxiu_connect");
         legacy["models"][0]["context_window"] = json!(if repaired { 500000 } else { 32768 });
         legacy["models"][0]["max_context_window"] = json!(if repaired { 872000 } else { 32768 });
         if repaired {
@@ -104,7 +104,7 @@ fn new_local_edits_persist_but_unchanged_generated_defaults_can_upgrade() {
     let mut catalog = read(&paths);
     // Simulate an older generated profile rather than a user edit.
     catalog["models"][0]["context_window"] = json!(200000);
-    catalog["_supergpt_connect"]["generated_context"]["gpt-6.1-sol"]["context_window"] =
+    catalog["_tokenxiu_connect"]["generated_context"]["gpt-6.1-sol"]["context_window"] =
         json!(200000);
     write(&paths, &catalog);
     adapter::apply(&paths, input("gpt-6.1-sol", json!({}))).unwrap();

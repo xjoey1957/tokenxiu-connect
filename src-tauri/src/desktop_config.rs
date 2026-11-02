@@ -8,7 +8,7 @@ use crate::{
 use serde_json::{json, Value};
 
 // A separate profile keeps the user's other gateways and CC Switch profiles intact.
-pub const PROFILE_ID: &str = "761c488f-5a98-4c98-bac9-8b667c5be40a";
+pub const PROFILE_ID: &str = "fe51677a-c22d-4b75-a158-c4c2c0b7723a";
 
 fn object(text: Option<&str>) -> Result<Value, String> {
     let value: Value = serde_json::from_str(
@@ -122,9 +122,9 @@ pub fn changes(
         return Err("Claude 桌面配置目录包含重复的 profile ID，请合并后再导入。".into());
     }
     if let Some(entry) = entries.iter_mut().find(|v| v["id"] == PROFILE_ID) {
-        entry["name"] = json!("SuperGPT Connect");
+        entry["name"] = json!("TokenXiu Connect");
     } else {
-        entries.push(json!({ "id": PROFILE_ID, "name": "SuperGPT Connect" }));
+        entries.push(json!({ "id": PROFILE_ID, "name": "TokenXiu Connect" }));
     }
     meta["appliedId"] = json!(PROFILE_ID);
     // Activate only after the credential, catalog and registry are ready.

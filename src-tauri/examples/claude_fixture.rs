@@ -1,6 +1,6 @@
 //! Create isolated real-client fixtures through the same import engine as the UI.
 use serde_json::json;
-use supergpt_connect_lib::{
+use tokenxiu_connect_lib::{
     adapter, capabilities,
     models::{Client, ValidatedInput},
     storage::Paths,

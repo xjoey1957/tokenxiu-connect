@@ -1,6 +1,6 @@
 //! Platform checks use only temporary user directories, including Unicode and spaces.
 use std::fs;
-use supergpt_connect_lib::{
+use tokenxiu_connect_lib::{
     adapter,
     models::{Client, ValidatedInput},
     restore,

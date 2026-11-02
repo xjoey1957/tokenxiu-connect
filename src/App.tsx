@@ -65,7 +65,7 @@ function BrandIcon({ className = "" }: { className?: string }) {
   return (
     <img
       className={`brand-icon ${className}`}
-      src="/supergpt.png"
+      src="/tokenxiu.png"
       alt=""
       draggable={false}
     />
@@ -128,7 +128,7 @@ function Modal({
 }
 function initialTheme(): "light" | "dark" {
   try {
-    return localStorage.getItem("supergpt-connect.theme") === "dark"
+    return localStorage.getItem("tokenxiu-connect.theme") === "dark"
       ? "dark"
       : "light";
   } catch {
@@ -206,7 +206,7 @@ export default function App() {
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
     try {
-      localStorage.setItem("supergpt-connect.theme", theme);
+      localStorage.setItem("tokenxiu-connect.theme", theme);
     } catch {
       /* Session theme still works. */
     }
@@ -341,7 +341,7 @@ export default function App() {
       <header className="app-header">
         <div className="brand">
           <BrandIcon />
-          <span className="brand-wordmark">supergpt</span>
+          <span className="brand-wordmark">tokenxiu</span>
           <span className="brand-divider" />
           <span className="brand-product">Connect</span>
         </div>
@@ -482,7 +482,7 @@ export default function App() {
                 <p>
                   {
                     [
-                      "默认使用 SuperGPT，也可以选择其他中转站。",
+                      "默认使用 TokenXiu，也可以选择其他中转站。",
                       "先选择产品，再选择你实际使用的入口。",
                       `使用 ${station.name} 的密钥，获取你可以选择的模型。`,
                       "勾选需要的模型，并指定一个默认模型。",
@@ -1044,7 +1044,7 @@ export default function App() {
         </div>
       </div>
       <footer className="app-footer">
-        <span>SuperGPT Connect</span>
+        <span>TokenXiu Connect</span>
         <button onClick={() => setAbout(true)} className="version-button">
           v{version} <span>·</span> 关于
         </button>
@@ -1073,7 +1073,7 @@ export default function App() {
         />
       )}
       {about && (
-        <Modal title="SuperGPT Connect" close={() => setAbout(false)}>
+        <Modal title="TokenXiu Connect" close={() => setAbout(false)}>
           <p className="dialog-intro">v{version} · 本地 API 配置器</p>
           <p className="about-copy">
             基于 CC Switch 的配置引擎与模型适配逻辑，采用 MIT 许可。原作者 Jason

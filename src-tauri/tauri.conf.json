@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "SuperGPT Connect",
+  "productName": "TokenXiu Connect",
   "version": "0.1.6",
-  "identifier": "dev.supergpt.connect",
+  "identifier": "com.tokenxiu.connect",
   "build": {
     "frontendDist": "../dist",
     "devUrl": "http://127.0.0.1:1420",
@@ -13,7 +13,7 @@
     "windows": [
       {
         "label": "main",
-        "title": "SuperGPT Connect",
+        "title": "TokenXiu Connect",
         "width": 740,
         "height": 800,
         "minWidth": 380,

@@ -6,7 +6,7 @@ import {
   parseStationPreferences,
 } from "../src/stations.ts";
 
-test("new installs and corrupted preferences fall back to SuperGPT", () => {
+test("new installs and corrupted preferences fall back to TokenXiu", () => {
   for (const raw of [null, "", "{", "{}", "null", '{"version":99}']) {
     assert.deepEqual(parseStationPreferences(raw), {
       version: 1,
@@ -64,7 +64,7 @@ test("invalid destinations cannot be saved, including credentials in URLs", () =
           custom: [{ id: "custom-test", name: "Bad", baseUrl: url }],
         }),
       ).selected,
-      "supergpt",
+      "tokenxiu",
     );
   }
   assert.equal(
@@ -79,21 +79,21 @@ test("duplicate destinations, duplicate IDs, and attempts to replace the default
       selected: "custom-removed",
       custom: [
         {
-          id: "supergpt",
+          id: "tokenxiu",
           name: "Imposter",
           baseUrl: "https://bad.example.test",
         },
         {
           id: "custom-copy",
           name: "Copy",
-          baseUrl: "https://api.supergpt.dev/v1",
+          baseUrl: "https://tokenxiu.com/v1",
         },
         { id: "custom-one", name: "One", baseUrl: "https://one.example.test" },
         { id: "custom-one", name: "Two", baseUrl: "https://two.example.test" },
       ],
     }),
   );
-  assert.equal(loaded.selected, "supergpt");
+  assert.equal(loaded.selected, "tokenxiu");
   assert.deepEqual(
     loaded.custom.map((item) => item.id),
     ["custom-one"],

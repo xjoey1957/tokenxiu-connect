@@ -1,5 +1,5 @@
 use std::fs;
-use supergpt_connect_lib::{
+use tokenxiu_connect_lib::{
     adapter,
     models::{Client, ValidatedInput},
     storage::{self, FileKind, Paths},
@@ -44,9 +44,9 @@ fn codex_merge_keeps_comments_mcp_and_permissions_and_restores_login_exactly() {
     assert!(merged.contains("approval_policy = \"on-request\""));
     assert!(merged.contains("[model_providers.original]"));
     let doc = merged.parse::<toml_edit::DocumentMut>().unwrap();
-    assert_eq!(doc["model_provider"].as_str(), Some("supergpt-connect"));
+    assert_eq!(doc["model_provider"].as_str(), Some("tokenxiu-connect"));
     assert_eq!(
-        doc["model_providers"]["supergpt-connect"]["base_url"].as_str(),
+        doc["model_providers"]["tokenxiu-connect"]["base_url"].as_str(),
         Some("https://api.example.test/v1")
     );
     let encoded = serde_json::to_string(&result).unwrap();
@@ -175,7 +175,7 @@ fn codex_import_preserves_supported_reasoning_preferences_and_restores_them() {
         data.model = "gpt-5.4".into();
         data.selected_models = vec![data.model.clone()];
         data.catalog = Some(
-            supergpt_connect_lib::models::build_codex_catalog(
+            tokenxiu_connect_lib::models::build_codex_catalog(
                 &serde_json::json!({"data":[{"id":"gpt-5.4"}]}),
                 &data.selected_models,
             )
@@ -208,7 +208,7 @@ fn codex_import_removes_only_reasoning_preferences_unsupported_by_the_new_model(
     data.model = "gpt-5.1-codex".into();
     data.selected_models = vec![data.model.clone()];
     data.catalog = Some(
-        supergpt_connect_lib::models::build_codex_catalog(
+        tokenxiu_connect_lib::models::build_codex_catalog(
             &serde_json::json!({"data":[{"id":"gpt-5.1-codex"}]}),
             &data.selected_models,
         )

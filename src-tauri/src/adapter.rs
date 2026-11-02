@@ -115,7 +115,7 @@ pub fn apply(paths: &Paths, input: ValidatedInput) -> Result<ImportResult, Strin
                 );
             }
             let mut provider = Table::new();
-            provider.insert("name", value("SuperGPT Connect"));
+            provider.insert("name", value("TokenXiu Connect"));
             provider.insert("base_url", value(format!("{}/v1", input.root)));
             provider.insert("wire_api", value("responses"));
             // Bind credentials to this route; never replace or forward the user's official login.
@@ -142,13 +142,13 @@ pub fn apply(paths: &Paths, input: ValidatedInput) -> Result<ImportResult, Strin
             }
             for (key, val) in [
                 ("model", input.model.as_str()),
-                ("model_provider", "supergpt-connect"),
+                ("model_provider", "tokenxiu-connect"),
                 ("web_search", input.options.web_search_value(&parsed)?),
             ] {
                 patch.set.push((KeyPath::new(&[key]), value(val)));
             }
             patch.set.push((
-                KeyPath::new(&["model_providers", "supergpt-connect"]),
+                KeyPath::new(&["model_providers", "tokenxiu-connect"]),
                 Item::Table(provider),
             ));
             if let Some(catalog) = &input.catalog {
@@ -178,12 +178,12 @@ pub fn apply(paths: &Paths, input: ValidatedInput) -> Result<ImportResult, Strin
                 let catalog_path = paths.target(FileKind::CodexCatalog);
                 let catalog_before = storage::read_optional(&catalog_path)?;
                 let same_route = parsed.get("model_provider").and_then(Item::as_str)
-                    == Some("supergpt-connect")
+                    == Some("tokenxiu-connect")
                     && parsed.get("model_catalog_json").and_then(Item::as_str)
                         == Some(catalog_path.to_string_lossy().as_ref())
                     && parsed
                         .get("model_providers")
-                        .and_then(|p| p.get("supergpt-connect"))
+                        .and_then(|p| p.get("tokenxiu-connect"))
                         .and_then(|p| p.get("base_url"))
                         .and_then(Item::as_str)
                         == Some(format!("{}/v1", input.root).as_str());

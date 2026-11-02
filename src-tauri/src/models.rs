@@ -512,7 +512,7 @@ pub fn build_codex_catalog(payload: &Value, selected: &[String]) -> Result<Strin
             Ok(row)
         })
         .collect::<Result<_, String>>()?;
-    serde_json::to_string_pretty(&json!({"models":entries,"_supergpt_connect":{
+    serde_json::to_string_pretty(&json!({"models":entries,"_tokenxiu_connect":{
         "context_sources":context_sources,"gateway_context_fields":gateway_context_fields
     }}))
     .map_err(|_| "无法生成模型目录。".into())

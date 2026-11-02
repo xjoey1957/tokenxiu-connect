@@ -1,6 +1,6 @@
 use serde_json::{json, Value};
 use std::fs;
-use supergpt_connect_lib::{
+use tokenxiu_connect_lib::{
     adapter, capabilities, claude_config,
     models::{Client, ValidatedInput},
     setup_options::{ArtifactMode, WebSearchMode},
@@ -182,7 +182,7 @@ fn codex_keeps_official_login_and_keyring_and_cleans_reserved_provider_names() {
             Some("Keep me")
         );
         assert_eq!(
-            doc["model_providers"]["supergpt-connect"]["experimental_bearer_token"].as_str(),
+            doc["model_providers"]["tokenxiu-connect"]["experimental_bearer_token"].as_str(),
             Some("sk-new-route-fixture")
         );
         let mut next = input(Client::Codex);
