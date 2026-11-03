@@ -20,7 +20,7 @@ trap cleanup EXIT
 app="$work/unpacked/TokenXiu Connect/TokenXiu Connect.app"
 exe="$app/Contents/MacOS/tokenxiu-connect"
 test -x "$exe"
-/usr/bin/lipo -verify_arch arm64 x86_64 "$exe"
+/usr/bin/lipo "$exe" -verify_arch arm64 x86_64
 /usr/bin/lipo -archs "$exe"
 /usr/bin/codesign --verify --deep --strict --verbose=2 "$app"
 test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$app/Contents/Info.plist")" = "$(node -p "require('./package.json').version")"

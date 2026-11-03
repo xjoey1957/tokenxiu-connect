@@ -23,7 +23,7 @@ const actual = run('/usr/libexec/PlistBuddy', ['-c', 'Print :CFBundleShortVersio
   { encoding: 'utf8', stdio: 'pipe' }).trim();
 if (actual !== version) throw new Error('App version does not match package.json');
 const binary = path.join(source, 'Contents/MacOS/tokenxiu-connect');
-run('/usr/bin/lipo', ['-verify_arch', 'x86_64', 'arm64', binary]);
+run('/usr/bin/lipo', [binary, '-verify_arch', 'x86_64', 'arm64']);
 run('/usr/bin/lipo', ['-archs', binary]);
 const release = path.join(root, 'release');
 fs.mkdirSync(release, { recursive: true });
