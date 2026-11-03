@@ -8,7 +8,7 @@ import { createHash } from 'node:crypto';
 if (process.platform !== 'darwin') throw new Error('Build the macOS package on macOS.');
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const version = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8')).version;
-const target = 'aarch64-apple-darwin';
+const target = 'universal-apple-darwin';
 function run(command, args, options = {}) {
   const result = spawnSync(command, args, { cwd: root, stdio: 'inherit', ...options });
   if (result.error) throw result.error;
@@ -22,10 +22,9 @@ const source = path.join(root, 'src-tauri/target', target, 'release/bundle/macos
 const actual = run('/usr/libexec/PlistBuddy', ['-c', 'Print :CFBundleShortVersionString', path.join(source, 'Contents/Info.plist')],
   { encoding: 'utf8', stdio: 'pipe' }).trim();
 if (actual !== version) throw new Error('App version does not match package.json');
-const binary = fs.readFileSync(path.join(source, 'Contents/MacOS/tokenxiu-connect'));
-if (binary.readUInt32LE(0) !== 0xfeedfacf || binary.readUInt32LE(4) !== 0x0100000c) {
-  throw new Error('Expected an Apple Silicon executable');
-}
+const binary = path.join(source, 'Contents/MacOS/tokenxiu-connect');
+run('/usr/bin/lipo', ['-verify_arch', 'x86_64', 'arm64', binary]);
+run('/usr/bin/lipo', ['-archs', binary]);
 const release = path.join(root, 'release');
 fs.mkdirSync(release, { recursive: true });
 const stage = fs.mkdtempSync(path.join(os.tmpdir(), 'tokenxiu-macos-package-'));
@@ -39,7 +38,7 @@ try {
   fs.cpSync(path.join(root, 'licenses'), path.join(folder, 'licenses'), { recursive: true });
   run('/usr/bin/codesign', ['--force', '--deep', '--sign', '-', app]);
   run('/usr/bin/codesign', ['--verify', '--deep', '--strict', app]);
-  fs.writeFileSync(path.join(folder, 'README.txt'), `TokenXiu Connect ${version} · macOS Apple Silicon
+  fs.writeFileSync(path.join(folder, 'README.txt'), `TokenXiu Connect ${version} · macOS Intel 和 Apple 芯片通用版
 
 解压后打开 TokenXiu Connect.app，也可拖入「应用程序」文件夹。
 选择中转站 → 选择客户端 → 输入 API Key → 获取并勾选模型 → 导入。
@@ -52,7 +51,7 @@ try {
 源码与说明：https://github.com/xjoey1957/tokenxiu-connect
 最新验证记录：https://github.com/xjoey1957/tokenxiu-connect/blob/main/VERIFICATION.md
 `);
-  const name = `TokenXiu-Connect-${version}-macOS-arm64.zip`;
+  const name = `TokenXiu-Connect-${version}-macOS-universal.zip`;
   const archive = path.join(stage, name);
   run('/usr/bin/ditto', ['-c', '-k', '--norsrc', '--keepParent', folder, archive]);
   fs.copyFileSync(archive, path.join(release, name));

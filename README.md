@@ -11,9 +11,9 @@ TokenXiu 的 Claude 和 Codex 本地 API 配置工具。默认连接 [TokenXiu](
 | 系统 | 软件 | 使用方法 |
 | --- | --- | --- |
 | Windows 10 / 11 x64 | Windows x64 portable ZIP | 将压缩包完整解压，双击 `TokenXiu Connect.exe` |
-| macOS Apple Silicon | macOS arm64 ZIP | 解压后打开 `TokenXiu Connect.app`，也可以拖到“应用程序” |
+| macOS 12 及以上 · Intel 和 Apple 芯片 | macOS universal ZIP | 解压后打开 `TokenXiu Connect.app`，也可以拖到“应用程序” |
 
-Mac 版本支持 Apple Silicon，不支持 Intel Mac。Windows 需要 WebView2 Runtime；如果电脑缺少，请从 [Microsoft 官方页面](https://developer.microsoft.com/microsoft-edge/webview2/)安装。运行软件无需安装 Node.js 或 Rust。Windows 软件未进行发布者签名，macOS 软件仅使用 ad-hoc 签名、未经过 Apple 公证，系统可能显示安全提示。Release 中的 `SHA256SUMS.txt` 可用于检查下载完整性。
+Mac 通用版同时支持 Intel 和 Apple 芯片；请下载 0.1.7 或更新版本，0.1.6 的 Mac 版仅支持 Apple 芯片。Windows 需要 WebView2 Runtime；如果电脑缺少，请从 [Microsoft 官方页面](https://developer.microsoft.com/microsoft-edge/webview2/)安装。运行软件无需安装 Node.js 或 Rust。Windows 软件未进行发布者签名，macOS 软件仅使用 ad-hoc 签名、未经过 Apple 公证，系统可能显示安全提示。Release 中的 `SHA256SUMS.txt` 可用于检查下载完整性。
 
 ## 接入 TokenXiu
 
@@ -39,8 +39,8 @@ pnpm build:web
 cargo test --manifest-path src-tauri/Cargo.toml --no-default-features --locked
 # 在 Windows 上构建免安装 ZIP
 pnpm build:windows
-# 在 macOS 上构建 Apple Silicon ZIP
-rustup target add aarch64-apple-darwin
+# 在 macOS 上构建 Intel / Apple 芯片通用 ZIP
+rustup target add aarch64-apple-darwin x86_64-apple-darwin
 pnpm build:macos
 ```
 

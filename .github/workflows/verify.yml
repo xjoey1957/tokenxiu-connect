@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-latest, windows-latest]
+        os: [macos-26, macos-26-intel, windows-latest]
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
     defaults:
@@ -54,10 +54,10 @@ jobs:
       - name: Native Windows portable build
         if: runner.os == 'Windows'
         run: pnpm build:windows
-      - name: Native Apple Silicon build
-        if: runner.os == 'macOS'
+      - name: Build universal macOS package
+        if: matrix.os == 'macos-26'
         run: |
-          rustup target add aarch64-apple-darwin
+          rustup target add aarch64-apple-darwin x86_64-apple-darwin
           pnpm build:macos
       - name: Preserve verification evidence
         if: always()
@@ -70,9 +70,33 @@ jobs:
             release/SHA256SUMS.txt
           if-no-files-found: ignore
 
+  macos-package-smoke:
+    needs: native
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-26
+            arch: arm64
+          - os: macos-26-intel
+            arch: x86_64
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: verification-macos-26
+          path: artifacts
+      - name: Verify and launch the distribution ZIP on native CPU
+        shell: bash
+        run: |
+          archive=$(find artifacts -name 'TokenXiu-Connect-*-macOS-universal.zip' -print)
+          test -n "$archive"
+          bash scripts/verify-macos-package.sh "$archive" '${{ matrix.arch }}'
+
   release:
     if: startsWith(github.ref, 'refs/tags/tokenxiu-v')
-    needs: native
+    needs: [native, macos-package-smoke]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -88,8 +112,9 @@ jobs:
           RELEASE_TAG: ${{ github.ref_name }}
         run: |
           mkdir release
-          find artifacts -name '*.zip' -exec cp {} release/ \;
+          find artifacts -name 'TokenXiu-Connect-*-Windows-x64-portable.zip' -exec cp {} release/ \;
+          find artifacts -name 'TokenXiu-Connect-*-macOS-universal.zip' -exec cp {} release/ \;
           test "$(find release -name '*.zip' | wc -l)" -eq 2
           cd release
           sha256sum *.zip > SHA256SUMS.txt
-          gh release create "$RELEASE_TAG" --title "TokenXiu Connect $RELEASE_TAG" --notes 'Windows x64 免安装版与 macOS Apple Silicon 版。签名说明及使用方法见 README。' *.zip SHA256SUMS.txt
+          gh release create "$RELEASE_TAG" --title "TokenXiu Connect $RELEASE_TAG" --notes 'Windows x64 免安装版与 macOS Intel / Apple 芯片通用版。macOS 包未经 Apple 公证，签名说明及使用方法见 README。' *.zip SHA256SUMS.txt
