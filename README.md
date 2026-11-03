@@ -10,8 +10,8 @@ TokenXiu 的 Claude 和 Codex 本地 API 配置工具。默认连接 [TokenXiu](
 
 | 系统 | 软件 | 使用方法 |
 | --- | --- | --- |
-| Windows 10 / 11 x64 | Windows x64 portable ZIP | 将压缩包完整解压，双击 `TokenXiu Connect.exe` |
-| macOS 12 及以上 · Intel 和 Apple 芯片 | macOS universal ZIP | 解压后打开 `TokenXiu Connect.app`，也可以拖到“应用程序” |
+| Windows 10 / 11 x64 | [Windows x64 portable ZIP](https://github.com/xjoey1957/tokenxiu-connect/releases/download/tokenxiu-v0.1.7/TokenXiu-Connect-0.1.7-Windows-x64-portable.zip) | 将压缩包完整解压，双击 `TokenXiu Connect.exe` |
+| macOS 12 及以上 · Intel 和 Apple 芯片 | [macOS universal ZIP](https://github.com/xjoey1957/tokenxiu-connect/releases/download/tokenxiu-v0.1.7/TokenXiu-Connect-0.1.7-macOS-universal.zip) | 解压后打开 `TokenXiu Connect.app`，也可以拖到“应用程序” |
 
 Mac 通用版同时支持 Intel 和 Apple 芯片；请下载 0.1.7 或更新版本，0.1.6 的 Mac 版仅支持 Apple 芯片。Windows 需要 WebView2 Runtime；如果电脑缺少，请从 [Microsoft 官方页面](https://developer.microsoft.com/microsoft-edge/webview2/)安装。运行软件无需安装 Node.js 或 Rust。Windows 软件未进行发布者签名，macOS 软件仅使用 ad-hoc 签名、未经过 Apple 公证，系统可能显示安全提示。Release 中的 `SHA256SUMS.txt` 可用于检查下载完整性。
 
@@ -48,4 +48,4 @@ pnpm build:macos
 
 ## 开源来源
 
-本项目基于 [superpilot69/supergpt-connect](https://github.com/superpilot69/supergpt-connect) 改造；原项目基于 CC Switch 的部分代码。原作者的版权及 MIT 许可保留在 [LICENSE](LICENSE) 和 [licenses](licenses/) 中，来源详见 [UPSTREAM.md](UPSTREAM.md)。本项目与 Claude、Codex 官方无关联。
+本项目基于 CC Switch 的部分代码。原作者的版权及 MIT 许可保留在 [LICENSE](LICENSE) 和 [licenses](licenses/) 中，来源详见 [UPSTREAM.md](UPSTREAM.md)。本项目与 Claude、Codex 官方无关联。

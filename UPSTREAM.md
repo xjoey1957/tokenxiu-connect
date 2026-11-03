@@ -23,7 +23,7 @@
 未包含上游的代理转发、自动故障切换、统计、MCP/Skills 管理、订阅登录、云同步、托盘、自动更新或深链接处理器。没有继承上游更新地址或应用标识，也不读取 CC Switch 数据库。
 
 
-TokenXiu Connect 基于 [SuperGPT Connect](https://github.com/superpilot69/supergpt-connect) 的提交 `65c260e` 改造。应用名称、图标、默认站点及应用标识已替换；原项目和 CC Switch 的版权及许可证予以保留。以下为上游的历史技术说明，其验证不等于 TokenXiu 线路验证。
+TokenXiu Connect 基于 SuperGPT Connect的提交 `65c260e` 改造。应用名称、图标、默认站点及应用标识已替换；原项目和 CC Switch 的版权及许可证予以保留。以下为上游的历史技术说明，其验证不等于 TokenXiu 线路验证。
 
 VS Code 注释保留使用 `jsonc-parser` 0.34.0（MIT），许可证随包附带于 `licenses/jsonc-parser-MIT.txt`。
 
