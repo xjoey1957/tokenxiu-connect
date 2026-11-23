@@ -13,7 +13,8 @@
 | 版本与覆盖 | ToolSearch 低于 2.1.14 提示；模型菜单低于 2.1.242 提示；桌面按需加载需 1.40609.0+ | 语义版本比较、未知版本提示；项目/管理策略仍可覆盖 |
 | Codex 鉴权 | 服务商表中保存 Bearer Key，保留 auth.json 与 keyring 偏好 | 无登录、原 API Key、原 ChatGPT 登录、继承错误环境 Key，实际请求认证 |
 | Codex 保留名称 | 备份并移除旧 openai/ollama/lmstudio provider 表；其他 provider 保留 | 真实客户端正常加载、精确恢复 |
-| Codex 联网搜索 | 保留现有值或选择关闭/缓存/实时；新安装默认关闭并明确显示 | 真实 Responses 请求搜索工具声明；未宣称所有线路能执行搜索 |
+| Codex 联网搜索 | 默认实时搜索，可改为保留现有值/关闭/缓存；TokenXiu 线路写入 actor 请求头后由 Codex `web.run` 调用 `/v1/alpha/search` | 0.1.8：Codex 0.164 / 0.171 对 tokenxiu.com 实测搜索、生图、命令执行；未宣称自定义线路能执行搜索 |
+| Codex 内置生图 | 仅 TokenXiu 线路写入 `x-openai-actor-authorization`，Codex 用同一 Key 调用 `/v1/images/generations`（gpt-image-2） | 0.1.8：真实 Codex 出图并按张计费；登录过免费版 ChatGPT 账号时 Codex 会隐藏生图工具 |
 | 模型目录与容量 | 保留图片元数据、按模型思考档位、真实容量、手工容量设置；未知容量阻止写入 | 原全量目录、图片 URL/本地 PNG、数字/Ultra 思考、压缩阈值回归 |
 | 桌面旧配置 | 独立 profile；迁移本地 enterpriseConfig 网关字段，保留策略/MCP | 四文件事务、重复 profile ID 拒绝、精确恢复 |
 | Windows 路径 | 精确目录优先，唯一有配置的后缀目录可识别，多个候选报错 | 跨平台目录选择用例、Windows 原生 CI |

@@ -189,12 +189,9 @@ fn codex_keeps_official_login_and_keyring_and_cleans_reserved_provider_names() {
             doc["model_providers"]["tokenxiu-connect"]["requires_openai_auth"].as_bool(),
             Some(false)
         );
-        assert_eq!(
-            doc["model_providers"]["tokenxiu-connect"]["http_headers"]
-                ["x-openai-actor-authorization"]
-                .as_str(),
-            Some("local-image-extension")
-        );
+        assert!(doc["model_providers"]["tokenxiu-connect"]
+            .get("http_headers")
+            .is_none());
         let mut next = input(Client::Codex);
         next.options.web_search = WebSearchMode::Cached;
         adapter::apply(&paths, next).unwrap();
@@ -254,4 +251,37 @@ fn client_version_gates_compare_numeric_components() {
     assert!(!capabilities::version_before("2.1.292", (2, 1, 242)));
     assert!(!capabilities::version_before("2.2.0-beta", (2, 1, 242)));
     assert!(capabilities::version_before("1.40608.9", (1, 40609, 0)));
+}
+
+#[test]
+fn codex_actor_header_is_written_only_for_tokenxiu_hosts() {
+    for (root, expected) in [
+        ("https://tokenxiu.com", true),
+        ("https://api.tokenxiu.com", true),
+        ("https://TokenXiu.com/", true),
+        ("https://gateway.example.test", false),
+        ("https://eviltokenxiu.com", false),
+        ("https://tokenxiu.com.example.test", false),
+        ("http://tokenxiu.com", false),
+    ] {
+        assert_eq!(adapter::is_tokenxiu_root(root), expected, "{root}");
+    }
+    let home = tempfile::tempdir().unwrap();
+    let paths = Paths::for_home(home.path());
+    let mut tokenxiu = input(Client::Codex);
+    tokenxiu.root = "https://tokenxiu.com".into();
+    adapter::apply(&paths, tokenxiu).unwrap();
+    let doc = read(&paths, FileKind::CodexConfig)
+        .parse::<toml_edit::DocumentMut>()
+        .unwrap();
+    let provider = &doc["model_providers"]["tokenxiu-connect"];
+    assert_eq!(provider["requires_openai_auth"].as_bool(), Some(false));
+    assert_eq!(
+        provider["http_headers"]["x-openai-actor-authorization"].as_str(),
+        Some("local-image-extension")
+    );
+    assert_eq!(
+        provider["base_url"].as_str(),
+        Some("https://tokenxiu.com/v1")
+    );
 }

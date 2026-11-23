@@ -198,12 +198,9 @@ fn codex_desktop_and_cli_share_catalog_credentials_and_restore_point() {
         doc["model_providers"]["tokenxiu-connect"]["requires_openai_auth"].as_bool(),
         Some(false)
     );
-    assert_eq!(
-        doc["model_providers"]["tokenxiu-connect"]["http_headers"]
-            ["x-openai-actor-authorization"]
-            .as_str(),
-        Some("local-image-extension")
-    );
+    assert!(doc["model_providers"]["tokenxiu-connect"]
+        .get("http_headers")
+        .is_none());
     assert_eq!(doc["model_provider"].as_str(), Some("tokenxiu-connect"));
     assert!(doc["model_catalog_json"]
         .as_str()

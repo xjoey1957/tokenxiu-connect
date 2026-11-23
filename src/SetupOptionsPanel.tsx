@@ -13,7 +13,7 @@ export default function SetupOptionsPanel({ client, models, value, change, disab
         <option value="disabled">关闭</option><option value="cached">缓存搜索</option><option value="live">实时搜索</option>
       </select>
     </label>
-    <p>默认开启实时搜索，Codex 可直接联网搜索，无需浏览器插件；不需要可改为关闭。</p>
+    <p>默认开启实时搜索：TokenXiu 线路下 Codex 可直接联网搜索，无需浏览器插件；不需要可改为关闭。</p>
   </>;
   if (client === "claude-desktop") return null;
   const roles = [["haiku", "轻量后台任务 / Haiku"], ["sonnet", "Sonnet 别名"], ["opus", "Opus 别名"],

@@ -39,6 +39,7 @@ import {
 } from "./native";
 import {
   DEFAULT_STATION,
+  isTokenXiuStation,
   loadStationPreferences,
   saveStationPreferences,
   stationAddress,
@@ -452,8 +453,8 @@ export default function App() {
                     <li key={text}>{text}</li>
                   ))}
                 </ol>
-                {selectedClient.id.startsWith("codex") && (
-                  <p>请完全退出 Codex（含托盘图标）后重新打开，并新建会话或重新选择一次模型，生图工具才会出现。</p>
+                {selectedClient.id.startsWith("codex") && isTokenXiuStation(station.baseUrl) && (
+                  <p>请完全退出 Codex（含托盘图标）后重新打开，并新建会话或重新选择一次模型，生图和联网搜索才会生效。</p>
                 )}
                 <p>已验证配置写入；尚未验证客户端实际发出请求。</p>
               </div>

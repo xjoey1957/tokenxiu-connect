@@ -15,6 +15,17 @@ export const DEFAULT_STATION: Station = {
 };
 export const STATION_STORAGE_KEY = "tokenxiu-connect.stations.v1";
 
+/** TokenXiu's own hosts get Codex image generation and web.run search. */
+export function isTokenXiuStation(baseUrl: string): boolean {
+  try {
+    const url = new URL(baseUrl);
+    const host = url.hostname.toLowerCase();
+    return url.protocol === "https:" && (host === "tokenxiu.com" || host.endsWith(".tokenxiu.com"));
+  } catch {
+    return false;
+  }
+}
+
 export function normalizeStationUrl(value: string): string {
   if (value.trim().length > 2048)
     throw new Error("API 地址过长，请检查后重试。");

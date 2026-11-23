@@ -1,6 +1,6 @@
 ## 0.1.8 — 2026-11-23
 
-- Codex 内置生图支持（写入 `x-openai-actor-authorization` 请求头）；生图专用 Key 提示；导入后重启提示。
+- TokenXiu 线路的 Codex 支持内置生图与 `web.run` 联网搜索（仅对 tokenxiu.com 写入 `x-openai-actor-authorization` 请求头，自定义线路不变）；生图专用 Key 提示；导入后重启提示。
 - Codex 联网搜索默认改为「实时搜索」，可在导入前改为关闭。
 
 ## 0.1.6 — 2026-10-19

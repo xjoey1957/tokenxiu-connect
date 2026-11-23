@@ -122,12 +122,16 @@ pub fn apply(paths: &Paths, input: ValidatedInput) -> Result<ImportResult, Strin
             provider.insert("experimental_bearer_token", value(&input.api_key));
             provider.insert("requires_openai_auth", value(false));
             provider.insert("supports_websockets", value(false));
-            let mut http_headers = InlineTable::new();
-            http_headers.insert(
-                "x-openai-actor-authorization",
-                Value::from("local-image-extension"),
-            );
-            provider.insert("http_headers", Item::Value(Value::InlineTable(http_headers)));
+            // Codex only exposes image generation and web.run search for providers that send
+            // this header. TokenXiu serves both routes; other stations keep the old behaviour.
+            if is_tokenxiu_root(&input.root) {
+                let mut http_headers = InlineTable::new();
+                http_headers.insert(
+                    "x-openai-actor-authorization",
+                    Value::from("local-image-extension"),
+                );
+                provider.insert("http_headers", Item::Value(Value::InlineTable(http_headers)));
+            }
             let mut patch = TomlPatch::default();
             // Codex rejects these reserved provider tables even when they are inactive.
             for id in ["openai", "ollama", "lmstudio"] {
@@ -242,4 +246,17 @@ pub fn apply(paths: &Paths, input: ValidatedInput) -> Result<ImportResult, Strin
         next_steps: crate::compatibility::next_steps(input.client),
         warnings: preview.warnings,
     })
+}
+
+/// True only for TokenXiu's own HTTPS hosts (tokenxiu.com and its subdomains).
+pub fn is_tokenxiu_root(root: &str) -> bool {
+    let Some(rest) = root.trim().strip_prefix("https://") else {
+        return false;
+    };
+    let host = rest
+        .split(|c: char| c == '/' || c == ':')
+        .next()
+        .unwrap_or_default()
+        .to_ascii_lowercase();
+    host == "tokenxiu.com" || host.ends_with(".tokenxiu.com")
 }

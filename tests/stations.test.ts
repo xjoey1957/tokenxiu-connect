@@ -99,3 +99,13 @@ test("duplicate destinations, duplicate IDs, and attempts to replace the default
     ["custom-one"],
   );
 });
+
+test("only TokenXiu's own HTTPS hosts count as TokenXiu stations", async () => {
+  const { isTokenXiuStation } = await import("../src/stations.ts");
+  for (const url of ["https://tokenxiu.com", "https://api.tokenxiu.com", "https://TokenXiu.com/"]) {
+    assert.equal(isTokenXiuStation(url), true, url);
+  }
+  for (const url of ["https://gateway.example.test", "https://eviltokenxiu.com", "https://tokenxiu.com.example.test", "http://tokenxiu.com", "not a url"]) {
+    assert.equal(isTokenXiuStation(url), false, url);
+  }
+});
