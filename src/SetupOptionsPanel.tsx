@@ -4,14 +4,17 @@ export default function SetupOptionsPanel({ client, models, value, change, disab
   client: Client; models: string[]; value: SetupOptions;
   change: (value: SetupOptions) => void; disabled: boolean;
 }) {
-  if (client.startsWith("codex")) return <label className="capability-setting">
-    <span>联网搜索</span>
-    <select aria-label="联网搜索" value={value.webSearch} disabled={disabled}
-      onChange={event => change({ ...value, webSearch: event.target.value as SetupOptions["webSearch"] })}>
-      <option value="preserve">保留现有设置（首次默认关闭）</option>
-      <option value="disabled">关闭</option><option value="cached">缓存搜索</option><option value="live">实时搜索</option>
-    </select>
-  </label>;
+  if (client.startsWith("codex")) return <>
+    <label className="capability-setting">
+      <span>联网搜索</span>
+      <select aria-label="联网搜索" value={value.webSearch} disabled={disabled}
+        onChange={event => change({ ...value, webSearch: event.target.value as SetupOptions["webSearch"] })}>
+        <option value="preserve">保留现有设置（首次默认关闭）</option>
+        <option value="disabled">关闭</option><option value="cached">缓存搜索</option><option value="live">实时搜索</option>
+      </select>
+    </label>
+    <p>默认开启实时搜索，Codex 可直接联网搜索，无需浏览器插件；不需要可改为关闭。</p>
+  </>;
   if (client === "claude-desktop") return null;
   const roles = [["haiku", "轻量后台任务 / Haiku"], ["sonnet", "Sonnet 别名"], ["opus", "Opus 别名"],
     ["fable", "Fable 别名"], ["subagent", "子代理模型"]] as const;

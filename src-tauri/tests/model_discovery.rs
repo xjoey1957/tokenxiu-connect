@@ -29,6 +29,19 @@ fn url_normalization_and_model_catalog_validation() {
     assert_eq!(models.len(), 2);
 }
 
+#[test]
+fn image_only_catalog_classification_requires_nonempty_gpt_image_ids() {
+    assert!(models::is_image_only_catalog(&[
+        "gpt-image-1".into(),
+        "gpt-image-2".into(),
+    ]));
+    assert!(!models::is_image_only_catalog(&[]));
+    assert!(!models::is_image_only_catalog(&[
+        "gpt-image-1".into(),
+        "gpt-5.6-sol".into(),
+    ]));
+}
+
 fn server(status: &str, headers: &str, body: &str) -> (String, std::thread::JoinHandle<String>) {
     let listener = TcpListener::bind("127.0.0.1:0").unwrap();
     let root = format!("http://{}", listener.local_addr().unwrap());

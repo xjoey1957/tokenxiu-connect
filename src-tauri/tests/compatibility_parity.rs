@@ -185,6 +185,16 @@ fn codex_keeps_official_login_and_keyring_and_cleans_reserved_provider_names() {
             doc["model_providers"]["tokenxiu-connect"]["experimental_bearer_token"].as_str(),
             Some("sk-new-route-fixture")
         );
+        assert_eq!(
+            doc["model_providers"]["tokenxiu-connect"]["requires_openai_auth"].as_bool(),
+            Some(false)
+        );
+        assert_eq!(
+            doc["model_providers"]["tokenxiu-connect"]["http_headers"]
+                ["x-openai-actor-authorization"]
+                .as_str(),
+            Some("local-image-extension")
+        );
         let mut next = input(Client::Codex);
         next.options.web_search = WebSearchMode::Cached;
         adapter::apply(&paths, next).unwrap();

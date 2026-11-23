@@ -10,7 +10,7 @@ use crate::{
 };
 use serde::Serialize;
 use serde_json::json;
-use toml_edit::{value, Item, Table};
+use toml_edit::{value, InlineTable, Item, Table, Value};
 
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -122,6 +122,12 @@ pub fn apply(paths: &Paths, input: ValidatedInput) -> Result<ImportResult, Strin
             provider.insert("experimental_bearer_token", value(&input.api_key));
             provider.insert("requires_openai_auth", value(false));
             provider.insert("supports_websockets", value(false));
+            let mut http_headers = InlineTable::new();
+            http_headers.insert(
+                "x-openai-actor-authorization",
+                Value::from("local-image-extension"),
+            );
+            provider.insert("http_headers", Item::Value(Value::InlineTable(http_headers)));
             let mut patch = TomlPatch::default();
             // Codex rejects these reserved provider tables even when they are inactive.
             for id in ["openai", "ollama", "lmstudio"] {

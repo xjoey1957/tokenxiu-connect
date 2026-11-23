@@ -203,6 +203,25 @@ pub fn catalog_models(payload: &Value) -> Vec<String> {
     models
 }
 
+pub fn is_image_only_catalog(models: &[String]) -> bool {
+    !models.is_empty() && models.iter().all(|id| id.starts_with("gpt-image"))
+}
+
+async fn response_json(mut response: reqwest::Response) -> Result<Value, String> {
+    let mut bytes = Vec::new();
+    while let Some(chunk) = response
+        .chunk()
+        .await
+        .map_err(|_| "读取模型目录失败，请重试。")?
+    {
+        if bytes.len() + chunk.len() > 2 * 1024 * 1024 {
+            return Err("模型目录过大，配置尚未写入。".into());
+        }
+        bytes.extend_from_slice(&chunk);
+    }
+    serde_json::from_slice(&bytes).map_err(|_| "API 返回的模型目录不是有效 JSON。".into())
+}
+
 pub async fn discover(input: DiscoveryInput) -> Result<DiscoveredModels, String> {
     let api_key = input.api_key.trim().to_string();
     if api_key.is_empty()
@@ -243,10 +262,12 @@ pub async fn discover(input: DiscoveryInput) -> Result<DiscoveredModels, String>
         }
     };
     let mut response = fetch(input.client.is_codex()).await?;
+    let mut used_plain_fallback = false;
     if input.client.is_codex() && matches!(response.status().as_u16(), 400 | 404 | 405 | 422) {
         // Some third-party gateways reject query parameters. Fall back once,
         // but never retry authentication, rate-limit, redirect, or server errors.
         response = fetch(false).await?;
+        used_plain_fallback = true;
     }
     if !response.status().is_success() {
         return Err(match response.status().as_u16() {
@@ -259,19 +280,7 @@ pub async fn discover(input: DiscoveryInput) -> Result<DiscoveredModels, String>
             code => format!("模型目录暂时不可用（HTTP {code}），配置尚未写入。"),
         });
     }
-    let mut bytes = Vec::new();
-    while let Some(chunk) = response
-        .chunk()
-        .await
-        .map_err(|_| "读取模型目录失败，请重试。")?
-    {
-        if bytes.len() + chunk.len() > 2 * 1024 * 1024 {
-            return Err("模型目录过大，配置尚未写入。".into());
-        }
-        bytes.extend_from_slice(&chunk);
-    }
-    let payload: Value =
-        serde_json::from_slice(&bytes).map_err(|_| "API 返回的模型目录不是有效 JSON。")?;
+    let payload = response_json(response).await?;
     let capabilities = if !input.client.is_codex() {
         crate::capabilities::discover(&client, &root, &api_key).await
     } else {
@@ -279,6 +288,20 @@ pub async fn discover(input: DiscoveryInput) -> Result<DiscoveredModels, String>
     };
     let models = catalog_models(&payload);
     if models.is_empty() {
+        if input.client.is_codex() {
+            if !used_plain_fallback {
+                if let Ok(plain_response) = fetch(false).await {
+                    if plain_response.status().is_success() {
+                        if let Ok(plain_payload) = response_json(plain_response).await {
+                            if is_image_only_catalog(&catalog_models(&plain_payload)) {
+                                return Err("这是生图专用分组的 Key（只有 gpt-image 生图模型），Codex 需要 GPT 对话分组的 Key。用 GPT 分组的 Key 导入后，Codex 里也能直接生图；生图专用 Key 请在站内「在线聊天」或绘图工具中使用。".into());
+                            }
+                        }
+                    }
+                }
+            }
+            return Err("密钥返回的模型目录为空，请检查分组是否有可用模型。如果这是生图专用分组的 Key，请改用 GPT 对话分组的 Key。".into());
+        }
         return Err("密钥返回的模型目录为空，请检查分组是否有可用模型。".into());
     }
     let rows = payload

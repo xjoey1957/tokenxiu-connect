@@ -452,6 +452,9 @@ export default function App() {
                     <li key={text}>{text}</li>
                   ))}
                 </ol>
+                {selectedClient.id.startsWith("codex") && (
+                  <p>请完全退出 Codex（含托盘图标）后重新打开，并新建会话或重新选择一次模型，生图工具才会出现。</p>
+                )}
                 <p>已验证配置写入；尚未验证客户端实际发出请求。</p>
               </div>
               {result.warnings.length > 0 && (

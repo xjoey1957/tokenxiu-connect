@@ -9,7 +9,13 @@ test("unchecking a role's model removes its hidden override without changing ano
 });
 test("client-specific settings cannot leak between desktop, Code and Codex", () => {
   const value = { claudeModels: { haiku: "light" }, artifactMode: "disabled" as const, webSearch: "live" as const };
-  assert.deepEqual(selectedOptions("claude-desktop", ["light"], value), DEFAULT_OPTIONS);
+  assert.deepEqual(selectedOptions("claude-desktop", ["light"], value), { ...DEFAULT_OPTIONS, webSearch: "preserve" });
   assert.deepEqual(selectedOptions("codex", ["light"], value), { ...DEFAULT_OPTIONS, webSearch: "live" });
   assert.equal(selectedOptions("claude-vscode", ["light"], value).webSearch, "preserve");
+});
+test("Codex defaults to live web search and Claude clients never send it", () => {
+  assert.equal(selectedOptions("codex-desktop", [], DEFAULT_OPTIONS).webSearch, "live");
+  assert.equal(selectedOptions("codex", [], DEFAULT_OPTIONS).webSearch, "live");
+  assert.equal(selectedOptions("claude", [], DEFAULT_OPTIONS).webSearch, "preserve");
+  assert.equal(selectedOptions("claude-desktop", [], DEFAULT_OPTIONS).webSearch, "preserve");
 });

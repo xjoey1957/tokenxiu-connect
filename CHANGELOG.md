@@ -1,3 +1,8 @@
+## 0.1.8 — 2026-11-23
+
+- Codex 内置生图支持（写入 `x-openai-actor-authorization` 请求头）；生图专用 Key 提示；导入后重启提示。
+- Codex 联网搜索默认改为「实时搜索」，可在导入前改为关闭。
+
 ## 0.1.6 — 2026-10-19
 
 - 对照 CC Switch 4.0.15 和当日 main，补全 Claude 网关自动模式兼容开关，统一 CLI / VS Code 的配置规则。
